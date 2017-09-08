@@ -1,22 +1,12 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout/layout">
 <head>
-    <title>Spring Boot and Thymeleaf - Greeting with Thymeleaf Layout Dialect!</title>
+    <title>用户管理</title>
 </head>
 <body>
 
 
 <section layout:fragment="content" id="app">
-    <n3-carousel>
-        <n3-slide v-for="item in list">
-            <img style="height: 400px" class="slide-img" :src="item.img"/>
-            <div class="carousel-caption">
-                <h3>{{item.title}}</h3>
-                <p>{{item.content}}</p>
-            </div>
-        </n3-slide>
-    </n3-carousel>
-
     <n3-data-table v-on:change="dataChange"
                    :source="source"
                    :columns="columns"
@@ -27,44 +17,12 @@
                    :async="true">
     </n3-data-table>
 </section>
-<aside layout:fragment="aside" id="aside">
 
-</aside>
 <footer layout:fragment="footer">
     <script>
        var app = new Vue({
             el: '#app',
             data: {
-                selectedUser: {
-                    id:0,
-                    account: ''
-                },
-                list: [
-                    {
-                        id: "7",
-                        title: "图片新闻测试",
-                        img: "http://www.photops.com/Photo/UpPhoto2010/201106/2011060409214653.jpg",
-                        create_at: "2017-05-05"
-                    },
-                    {
-                        id: "8",
-                        title: "图片新闻2",
-                        img: "http://www.photops.com/Photo/UpPhoto2010/201106/2011060409214653.jpg",
-                        create_at: "2017-05-05"
-                    },
-                    {
-                        id: "7",
-                        title: "图片新闻测试",
-                        img: "http://www.photops.com/Photo/UpPhoto2010/201106/2011060409214653.jpg",
-                        create_at: "2017-05-05"
-                    },
-                    {
-                        id: "8",
-                        title: "图片新闻2",
-                        img: "http://www.photops.com/Photo/UpPhoto2010/201106/2011060409214653.jpg",
-                        create_at: "2017-05-05"
-                    }
-                ],
                 selection: {
                     checkRows: [],
                     onSelect (record, checked, checkRows) {
@@ -222,7 +180,6 @@
                     })
                 },
                 dataChange: function (page, query, sort, filter) {
-                    query = query.trim()
                     console.log(sort)
                     let state = 0
                     if (filter[0]) {
@@ -266,58 +223,6 @@
             },
             mounted () {
                 this.initUsers()
-            }
-        })
-
-        var aside = new Vue({
-            el: '#aside',
-            data: {
-                messages: [],
-                allMessage: '',
-                oneMessage: ''
-            },
-            created: function () {
-                this.sockConnect()
-            },
-            computed: {
-
-            },
-            methods: {
-                sockConnect: function () {
-                    let self = this
-                    var socket = new SockJS('/gs-guide-websocket');
-                    stompClient = Stomp.over(socket);
-                    stompClient.connect({}, function (frame) {
-                        console.log('Connected: ' + frame);
-//                        stompClient.subscribe('/topic/all', function (greeting) {
-//                            console.log(greeting)
-//
-//                                self.n3Alert({
-//                                    content: greeting.body,
-//                                    type: 'default',
-//                                    "icon": "smile-o",
-//                                    placement: 'top-right',
-//                                    duration: 5000,
-////                                    width:'200px' // 内容不确定，建议设置width
-//                                })
-//
-//
-//                          self.allMessage = greeting.body;
-//                        });
-                        stompClient.subscribe('/user/topic/one', function (greeting) {
-                            console.log(greeting)
-                            self.n3Alert({
-                                content: greeting.body,
-                                type: 'success',
-                                "icon": "gift",
-                                placement: 'top-right',
-                                duration: 0,
-//                                    width:'200px' // 内容不确定，建议设置width
-                            })
-                            self.oneMessage = greeting.body;
-                        });
-                    });
-                }
             }
         })
     </script>

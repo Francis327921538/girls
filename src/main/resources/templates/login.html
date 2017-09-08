@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"/>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <!-- 引入Vue -->
+    <script th:src="@{/plugins/vue/vue.min.js}"></script>
+    <script th:src="@{/plugins/vue/axios.min.js}"></script>
+    <script th:src="@{/plugins/vue/vue-resource.js}"></script>
+    <script th:src="@{/plugins/vue/n3.min.js}" src="https://unpkg.com/N3-components@2.4.0/dist/index.min.js"></script>
+    <link rel="stylesheet" th:href="@{/plugins/vue/n3.min.css}" href="https://unpkg.com/N3-components@2.4.0/dist/index.min.css"/>
+    <script>
+        Vue.prototype.$wepapi = 'http://localhost:8080/'
+    </script>
+</head>
+<body>
+<div id="app">
+    <n3-container fluid="true">
+        <n3-row>
+            <n3-column :col="8" :offset="2" class="context">
+                <n3-form ref='form'>
+                    <n3-form-item
+                            need="true"
+                            label="用户名"
+                            :label-col="3">
+                        <n3-input
+                                name="username"
+                                v-model="model.username"
+                                :rules="[{type:'required'}]">
+                        </n3-input>
+                    </n3-form-item>
+                    <n3-form-item
+                            need="true"
+                            label="密码"
+                            :label-col="3">
+                        <n3-input
+                                name="password"
+                                v-model="model.password"
+                                :rules="[{type:'required'}]">
+                        </n3-input>
+                    </n3-form-item>
+                    <n3-form-item :label-col="3">
+                        <n3-button v-on:click.native="submit()">提交</n3-button>
+                    </n3-form-item>
+                </n3-form>
+            </n3-column>
+        </n3-row>
+    </n3-container>
+</div>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            model: {
+                username: '',
+                password: ''
+            }
+        },
+        created: function () {
+        },
+        methods: {
+            usernameValidate (val) {
+//                if (/[\u4E00-\u9FA5\uF900-\uFA2D]/.test(val)) {
+//                    return {
+//                        validStatus: 'success'
+//                    }
+//                } else {
+//                    return {
+//                        validStatus: 'error',
+//                        tips: '请输入中文名'
+//                    }
+//                }
+            },
+            hello: function () {
+                console.log('hello')
+            },
+            submit () {
+                var formData = new FormData();
+                formData.append("username", this.model.username);
+                formData.append("password", this.model.password); // 数字 123456 会被立即转换成字符串 "123456"
+                this.$refs.form.validateFields(result => {
+                    console.log(result)
+                    if (result.isvalid) {
+                        axios.post('/login', formData).then(res => {
+                            if (res.status == 200) {
+                                this.n3Toast({
+                                    text: '成功',
+                                    type: 'success',
+                                    placement: 'top',
+                                    closeOnClick: true
+                                })
+                                if (window.location.href.indexOf(res.data.entity) == -1) {
+//                                    window.location.href = this.$wepapi + "" + res.data.entity==null?"":res.data.entity
+                                    window.location.href = this.$wepapi + ""
+                                } else {
+                                    window.location.href = this.$wepapi + ""
+                                }
+                            } else {
+                                this.n3Toast({
+                                    text: res.data.message,
+                                    type: 'error',
+                                    placement: 'top',
+                                    closeOnClick: true
+                                })
+                                console.log(res)
+                            }
+                        })
+                    }
+
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>

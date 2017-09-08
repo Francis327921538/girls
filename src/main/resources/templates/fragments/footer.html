@@ -1,0 +1,17 @@
+<html lang="en"/>
+<footer layout:fragment="footer">
+    <p th:text="'Hello common footer fragment (' + ${name} + ')!'">footer fragment</p>
+    <script>
+        new Vue({
+            el: '#app_container',
+            data: {
+//                now_data: ''
+            },
+            methods: {
+                hello: function () {
+                    console.log('hello world!')
+                }
+            }
+        })
+    </script>
+</footer>

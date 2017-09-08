@@ -3,3 +3,8 @@ server:
 girl:
   cupSize: B
   age: 18
+spring:
+  jpa:
+      hibernate:
+        ddl-auto: update
+        show-sql: true

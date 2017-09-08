@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <title>Layout</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- 引入Vue -->
+    <script th:src="@{/plugins/vue/vue.min.js}"></script>
+    <script th:src="@{/plugins/vue/axios.min.js}"></script>
+    <script th:src="@{/plugins/vue/vue-resource.js}"></script>
+    <script th:src="@{/js/jquery.js}"></script>
+    <script th:src="@{/js/sockjs.min.js}"></script>
+    <script th:src="@{/js/stomp.min.js}"></script>
+    <script th:src="@{/plugins/vue/n3.min.js}" src="https://unpkg.com/N3-components@2.4.0/dist/index.min.js"></script>
+    <link rel="stylesheet" th:href="@{/plugins/vue/n3.min.css}" href="https://unpkg.com/N3-components@2.4.0/dist/index.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <!--<link rel="stylesheet" th:href="@{/css/ace.min.css}"/>-->
+    <script>
+        Vue.prototype.$wepapi = 'http://localhost:8080/'
+    </script>
+    <style>
+    </style>
+</head>
+<body>
+<div class="row">
+    <div class="col-md-12">
+        <nav id="nav" th:replace="fragments/nav :: nav">nav</nav>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <sidebar id="sidebar"sidebar th:replace="fragments/sidebar :: sidebar">sidebar</sidebar>
+    </div>
+    <div class="col-md-7">
+        <section id="content" layout:fragment="content">content</section>
+    </div>
+    <div class="col-md-3">
+        <aside id="aside" layout:fragment="aside">aside</aside>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <footer id="footer" th:replace="fragments/footer :: footer">footer</footer>
+    </div>
+</div>
+
+<!--<nav class="navbar navbar-inverse navbar-fixed-top">-->
+    <!--<div class="container">-->
+        <!--<div class="navbar-header">-->
+            <!--<a class="navbar-brand" href="#">Common Navigation Bar</a>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</nav>-->
+
+<!--<div class="container" id="app">-->
+    <!--<h1 layout:fragment="header">This is a layout header</h1>-->
+
+    <!--<div layout:fragment="content">A placeholder for real content.</div>-->
+<!--</div>-->
+<script>
+//    new Vue({
+//        el: '#app'
+//    })
+</script>
+<script th:src="@{/plugins/vue/n3.min.js}" src="https://unpkg.com/N3-components@2.4.0/dist/index.min.js"></script>
+
+</body>
+</html>

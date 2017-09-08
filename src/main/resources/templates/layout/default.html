@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Spring Boot and Thymeleaf - Thymeleaf Layout Dialect</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- 引入Vue -->
+    <script th:src="@{/plugins/vue/vue.min.js}"></script>
+    <script th:src="@{/plugins/vue/axios.min.js}"></script>
+    <script th:src="@{/plugins/vue/vue-resource.js}"></script>
+    <script th:src="@{/plugins/vue/n3.min.js}" src="https://unpkg.com/N3-components@2.4.0/dist/index.min.js"></script>
+    <link rel="stylesheet" th:href="@{/plugins/vue/n3.min.css}" href="https://unpkg.com/N3-components@2.4.0/dist/index.min.css"/>
+    <script>
+        Vue.prototype.$wepapi = 'http://localhost:8080/'
+    </script>
+</head>
+<body>
+<n3-container fluid="true" id="app_container">
+    <n3-row>
+        <n3-column :col="12">
+            <nav th:replace="fragments/nav :: nav">
+                <p>This is default header area for default layout</p>
+            </nav>
+        </n3-column>
+    </n3-row>
+    <n3-row>
+        <n3-column :col="2" class="context">
+            <sidebar th:replace="fragments/sidebar :: sidebar">
+                <p th:text="${'Hello ' + name + '!'}"></p>
+            </sidebar>
+        </n3-column>
+        <n3-column :col="7" class="context">
+            <section id="content" layout:fragment="content">
+                <p>This is default main content with default layout</p>
+            </section>
+        </n3-column>
+        <n3-column :col="3" class="context">
+            <n3-datetimepicker  readonly="true"  format="yyyy-MM-dd hh:mm"></n3-datetimepicker>
+        </n3-column>
+    </n3-row>
+    <p>
+        <n3-data-table fixed-columns="" height="400px" :selection="selection" :source="source" :columns="columns"
+                       :refresh="refresh">
+        </n3-data-table>
+    </p>
+    <n3-row>
+        <n3-column :col="12">
+            <footer th:replace="fragments/footer :: footer">
+            </footer>
+        </n3-column>
+    </n3-row>
+</n3-container>
+</body>
+</html>

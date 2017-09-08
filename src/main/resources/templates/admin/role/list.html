@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout/layout">
+<head>
+    <title>用户管理</title>
+</head>
+<body>
+
+
+<section layout:fragment="content" id="app">
+    <n3-data-table v-on:change="dataChange"
+                   :source="source"
+                   :columns="columns"
+                   :page="false"
+                   :loading="loading"
+                   :refresh="initRoles">
+    </n3-data-table>
+</section>
+
+<footer layout:fragment="footer">
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                selection: {
+                    checkRows: [],
+                    onSelect (record, checked, checkRows) {
+                    },
+                    onSelectAll (checked, checkRows, changeRows) {
+                    },
+                    getCheckboxProps (record) {
+                        if (record.key == 2) {
+                            return {
+                                checked: true,
+                                disabled: true
+                            }
+                        } else {
+                            return {
+                                disabled: false
+                            }
+                        }
+                    }
+                },
+                loading: true,
+                pagination: {
+                    current: 1,
+                    total: 10,
+                    pagesize: 10
+                },
+                columns: [{
+                    title: '角色名称',
+                    dataIndex: 'name',
+                    sort: true,
+                    width: '100px'
+                }, {
+                    title: '角色标志',
+                    dataIndex: 'identifier',
+                    width: '150px'
+                }, {
+                    title: '角色描述',
+                    dataIndex: 'description',
+                    width: '150px'
+                }, {
+                    title: '拥有权限',
+                    dataIndex: 'permissions',
+                    width: '250px',
+                    render: function (val, record) {
+                        console.log(val)
+                        let perms = [1,2,4]
+                        var doms = [];
+                        for (perm in val) {
+                            doms.push( `<p>${val[perm].permissionName}</p>`);
+                        }
+                        return `${doms}`
+                    }
+                }, {
+                    title: '是否可用',
+                    dataIndex: 'available',
+                    width: '100px',
+                    render: function (val, record) {
+                        return `${val ? '是' : '<span class="orange">否</span>'}`
+                    }
+                }, {
+                    title: '操作',
+                    dataIndex: '',
+                    width: '150px',
+                    render: (text, record, index) => {
+                        return `<span class="item">
+                    <n3-button size="xs" type="danger" v-on:click.native="del('${record.id}','${record.account}','${index}')">删除</n3-button>
+                  </span>`
+                    }
+                }],
+                source: [],
+            },
+            methods: {
+                change (p, q, s, f) {
+                    console.log(p)
+                    console.log(q)
+                    console.log(s)
+                    console.log(f)
+                },
+                refresh () {
+                    this.dataChange
+                },
+                del: function (id, account) {
+                    let self = this
+                    self.n3Modal.confirm({
+                        title: '删除用户-' + id,
+                        message: `<h3>确定删除？</h3><p>ID:${id}</p><p>账户:${account}</p>`,
+                        effect: 'zoom',
+                        type: 'warning',
+                        onShow () {
+                            console.log('打开对话框时触发')
+                        },
+                        onConfirm () {
+                            console.log('点击确定按钮时触发')
+                            console.log(self.$wepapi)
+                            axios.delete(self.$wepapi + 'user/' + id + '/delete').then(res => {
+                                self.initUsers()
+                                if(res.data.success) {
+                                    self.n3Alert({
+                                        content: res.data.message,
+                                        type: 'success',
+                                        placement: 'top-right',
+                                        duration: 2000,
+                                        width:'200px' // 内容不确定，建议设置width
+                                    })
+                                }
+                            }, err => {
+                                self.n3Alert({
+                                    content: err.data.message,
+                                    type: 'error',
+                                    placement: 'top-right',
+                                    duration: 2000,
+                                    width:'200px' // 内容不确定，建议设置width
+                                })
+                            })
+                        },
+                        onHide () {
+                            console.log('关闭对话框时触发')
+                        }
+                    })
+                },
+                initRoles: function () {
+                    let self = this
+                    axios.get(self.$wepapi + "role/page").then(res => {
+                        console.log(res.data)
+                        self.loading = false
+                        self.source = res.data.entity
+                    })
+                },
+                dataChange: function (page, query, sort, filter) {
+                    let self = this
+                    axios.get(self.$wepapi + "role/page").then(res => {
+                        self.source = res.data.entity.content
+                    })
+                },
+                hello: function () {
+                    console.log('hello')
+                    this.$refs.delModal.close()
+                }
+            },
+            mounted () {
+                this.initRoles()
+            }
+        })
+    </script>
+</footer>
+</body>
+</html>
